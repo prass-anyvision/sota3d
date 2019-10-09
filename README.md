@@ -35,7 +35,7 @@ Refer to the respective documentation for more details about each benchmark.
 The current supported benchmarks are:
 
 **Classification**
-- *ModelNet40*: Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
+- [*ModelNet40*](https://github.com/pqhieu/sota3d/tree/master/sota3d/modelnet40): Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
 
 **Semantic segmentation**
-- *S3DIS*: Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
+- [*S3DIS*](https://github.com/pqhieu/sota3d/tree/master/sota3d/s3dis): Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
