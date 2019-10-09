@@ -4,14 +4,26 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch3d
+import torch3d.transforms as transforms
 import torch3d.metrics as metrics
 
 from .. import Trainer
 from .. import utils
 
 
-def create_dataloaders(config):
-    transform = torch3d.transforms.ToTensor()
+def create_transform(config):
+    if config['model']['name'] == 'pointnet':
+        transform = transforms.ToTensor()
+    elif config['model']['name'] == 'pointcnn':
+        transform = transforms.Compose([
+            transforms.Downsample(2048),
+            transforms.Shuffle(),
+            transforms.ToTensor()
+        ])
+    return transform
+
+
+def create_dataloaders(config, transform):
     dataloaders = {
         'train': torch.utils.data.DataLoader(
             torch3d.datasets.S3DIS(
@@ -50,6 +62,11 @@ def create_model(config):
             config['model']['in_channels'],
             config['model']['num_classes']
         )
+    elif config['model']['name'] == 'pointcnn':
+        model = torch3d.models.segmentation.PointCNN(
+            config['model']['in_channels'],
+            config['model']['num_classes']
+        )
     return model
 
 
@@ -78,7 +95,8 @@ def main(args, options=None):
         config = utils.override_config(config, options)
     print(yaml.dump(config))
 
-    dataloaders = create_dataloaders(config)
+    transform = create_transform(config)
+    dataloaders = create_dataloaders(config, transform)
     model = create_model(config)
     optimizer = create_optimizer(config, model.parameters())
     criteria = nn.CrossEntropyLoss()

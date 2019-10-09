@@ -1,0 +1,24 @@
+dataset:
+  root: 'data'
+  batch_size: 16
+  num_workers: 8
+  test_area: 5
+  download: False
+model:
+  name: 'pointcnn'
+  in_channels: 0
+  num_classes: 13
+optimizer:
+  name: 'adam'
+  lr: 0.001
+  momentum: 0.9
+trainer:
+  device: 'cuda'
+  epochs: 100
+  logdir: 'logs/s3dis/pointcnn'
+  log_interval: 5
+  eval_freq: 10
+  monitor: 'max accuracy'
+  tensorboard: false
+  early_stopping: false
+  resume: False
