@@ -9,10 +9,8 @@ Here we focus on the classification task.
 Leaderboard
 -----------
 
-| Method        | overall acc. | mean acc. |
-| ------------- | -----------: | --------: |
-| PointNet      | 0.882        | 0.850     |
-| PointNet++    |              |           |
-| PointCNN      | **0.901**    | **0.857** |
+| Method        | overall acc. | mean acc. | # runs   |
+| ------------- | -----------: | --------: | -------: |
+| PointNet      | 0.882        | 0.850     | 1        |
 
 Last update: 9 October 2019
