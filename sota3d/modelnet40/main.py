@@ -4,55 +4,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch3d
+import torch3d.datasets as datasets
 import torch3d.transforms as transforms
 import torch3d.metrics as metrics
 
 from .. import Trainer
 from .. import utils
-
-
-categories = [
-    'airplane',
-    'bathtub',
-    'bed',
-    'bench',
-    'bookshelf',
-    'bottle',
-    'bowl',
-    'car',
-    'chair',
-    'cone',
-    'cup',
-    'curtain',
-    'desk',
-    'door',
-    'dresser',
-    'flower_pot',
-    'glass_box',
-    'guitar',
-    'keyboard',
-    'lamp',
-    'laptop',
-    'mantel',
-    'monitor',
-    'night_stand',
-    'person',
-    'piano',
-    'plant',
-    'radio',
-    'range_hood',
-    'sink',
-    'sofa',
-    'stairs',
-    'stool',
-    'table',
-    'tent',
-    'toilet',
-    'tv_stand',
-    'vase',
-    'wardrobe',
-    'xbox'
-]
 
 
 def create_transform(config):
@@ -70,7 +27,7 @@ def create_transform(config):
 def create_dataloaders(config, transform):
     dataloaders = {
         'train': torch.utils.data.DataLoader(
-            torch3d.datasets.ModelNet40(
+            datasets.ModelNet40(
                 config['dataset']['root'],
                 train=True,
                 transform=transform,
@@ -82,7 +39,7 @@ def create_dataloaders(config, transform):
             shuffle=True
         ),
         'test': torch.utils.data.DataLoader(
-            torch3d.datasets.ModelNet40(
+            datasets.ModelNet40(
                 config['dataset']['root'],
                 train=False,
                 transform=transforms.ToTensor(),
@@ -157,6 +114,7 @@ def main(args, options=None):
         trainer.fit()
     trainer.evaluate()
     # report evaluation metrics
+    categories = datasets.ModelNet40.categories
     if metrics is not None:
         for metric in metrics:
             metric.report(categories)

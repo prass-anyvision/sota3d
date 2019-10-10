@@ -2,7 +2,7 @@ dataset:
   root: 'data'
   batch_size: 32
   num_workers: 8
-  download: False
+  download: True
 model:
   name: 'pointcnn'
   in_channels: 0
