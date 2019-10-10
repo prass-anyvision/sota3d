@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch3d
+import torch3d.datasets as datasets
 import torch3d.transforms as transforms
 import torch3d.metrics as metrics
 
@@ -26,7 +27,7 @@ def create_transform(config):
 def create_dataloaders(config, transform):
     dataloaders = {
         'train': torch.utils.data.DataLoader(
-            torch3d.datasets.S3DIS(
+            datasets.S3DIS(
                 config['dataset']['root'],
                 train=True,
                 test_area=config['dataset']['test_area'],
@@ -39,11 +40,11 @@ def create_dataloaders(config, transform):
             shuffle=True
         ),
         'test': torch.utils.data.DataLoader(
-            torch3d.datasets.S3DIS(
+            datasets.S3DIS(
                 config['dataset']['root'],
                 train=False,
                 test_area=config['dataset']['test_area'],
-                transform=transform,
+                transform=transforms.ToTensor(),
                 download=False
             ),
             batch_size=config['dataset']['batch_size'],
@@ -85,7 +86,8 @@ def create_optimizer(config, parameters):
 
 def create_metrics(config):
     accuracy = metrics.Accuracy(config['model']['num_classes'])
-    return [accuracy]
+    jaccard = metrics.Jaccard(config['model']['num_classes'])
+    return [accuracy, jaccard]
 
 
 def main(args, options=None):
@@ -114,6 +116,11 @@ def main(args, options=None):
     if not args.eval:
         trainer.fit()
     trainer.evaluate()
+    # report evaluation metrics
+    categories = datasets.S3DIS.categories
+    if metrics is not None:
+        for metric in metrics:
+            metric.report(categories)
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ dataset:
   batch_size: 32
   num_workers: 8
   test_area: 5
-  download: False
+  download: True
 model:
   name: 'pointnet'
   in_channels: 9
