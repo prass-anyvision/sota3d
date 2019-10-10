@@ -13,8 +13,8 @@ Sota3d has three goals:
    methods.
 3. Sharing up-to-date state-of-the-art models in 3D deep learning.
 
-Guideline
----------
+Guidelines
+----------
 
 The evaluation process must be *deterministic*, that means the evaluation
 scores obtained from different runs of a method using the same parameters have
