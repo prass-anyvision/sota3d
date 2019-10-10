@@ -16,6 +16,14 @@ Sota3d has three goals:
 Guideline
 ---------
 
+The evaluation process must be *deterministic*, that means the evaluation
+scores obtained from different runs of a method using the same parameters have
+to be the same. Specifically, the following items must **NOT** depend on any
+random processes:
+- Evaluation metrics
+- Order of the test set
+- Content of the input
+
 Usage
 -----
 

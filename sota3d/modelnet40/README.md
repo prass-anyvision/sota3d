@@ -4,6 +4,8 @@ Description
 This benchmark uses the ModelNet40 subset from the Princeton Modelnet dataset.
 Here we focus on the classification task.
 
+**Metrics**: overall accuracy and mean accuray.
+
 Leaderboard
 -----------
 
