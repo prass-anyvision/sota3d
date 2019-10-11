@@ -1,8 +1,8 @@
 dataset:
   root: 'data'
-  batch_size: 32
+  batch_size: 64
   num_workers: 8
-  download: True
+  download: true
 model:
   name: 'pointcnn'
   in_channels: 0
@@ -20,4 +20,4 @@ trainer:
   monitor: 'max accuracy'
   tensorboard: false
   early_stopping: false
-  resume: False
+  resume: false
