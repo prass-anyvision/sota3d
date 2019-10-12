@@ -4,6 +4,14 @@ sota3d
 Sota3d is an attempt to reproduce and benchmark state-of-the-art 3D deep
 learning methods on [PyTorch](https://pytorch.org/).
 
+The current supported benchmarks are:
+**Classification**
+- [*ModelNet40*](https://github.com/pqhieu/sota3d/tree/master/sota3d/modelnet40):
+  Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
+**Semantic segmentation**
+- [*S3DIS*](https://github.com/pqhieu/sota3d/tree/master/sota3d/s3dis):
+  Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
+
 Why Sota3d?
 -----------
 
@@ -38,12 +46,3 @@ dataset, enter the following command:
 ```bash
 python -m sota3d.<dataset>.main --config configs/<dataset>/<model>.yaml
 ```
-
-Refer to the respective documentation for more details about each benchmark.
-The current supported benchmarks are:
-
-**Classification**
-- [*ModelNet40*](https://github.com/pqhieu/sota3d/tree/master/sota3d/modelnet40): Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
-
-**Semantic segmentation**
-- [*S3DIS*](https://github.com/pqhieu/sota3d/tree/master/sota3d/s3dis): Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
