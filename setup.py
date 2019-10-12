@@ -10,7 +10,6 @@ requirements = [
     'torch3d'
 ]
 
-
 __version__ = '0.1.0'
 
 setup(
