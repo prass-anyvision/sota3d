@@ -13,9 +13,9 @@ from .. import utils
 
 
 def create_transform(config):
-    if config['model']['name'] == 'pointnet':
+    if config["model"]["name"] == "pointnet":
         transform = transforms.ToTensor()
-    elif config['model']['name'] == 'pointcnn':
+    elif config["model"]["name"] == "pointcnn":
         transform = transforms.Compose([
             transforms.Downsample(2048),
             transforms.Shuffle(),
@@ -26,29 +26,29 @@ def create_transform(config):
 
 def create_dataloaders(config, transform):
     dataloaders = {
-        'train': torch.utils.data.DataLoader(
+        "train": torch.utils.data.DataLoader(
             datasets.S3DIS(
-                config['dataset']['root'],
+                config["dataset"]["root"],
                 train=True,
-                test_area=config['dataset']['test_area'],
+                test_area=config["dataset"]["test_area"],
                 transform=transform,
-                download=config['dataset']['download']
+                download=config["dataset"]["download"]
             ),
-            batch_size=config['dataset']['batch_size'],
-            num_workers=config['dataset']['num_workers'],
+            batch_size=config["dataset"]["batch_size"],
+            num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
             shuffle=True
         ),
-        'test': torch.utils.data.DataLoader(
+        "test": torch.utils.data.DataLoader(
             datasets.S3DIS(
-                config['dataset']['root'],
+                config["dataset"]["root"],
                 train=False,
-                test_area=config['dataset']['test_area'],
+                test_area=config["dataset"]["test_area"],
                 transform=transforms.ToTensor(),
                 download=False
             ),
-            batch_size=config['dataset']['batch_size'],
-            num_workers=config['dataset']['num_workers'],
+            batch_size=config["dataset"]["batch_size"],
+            num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
             shuffle=False
         )
@@ -58,40 +58,40 @@ def create_dataloaders(config, transform):
 
 def create_model(config):
     model = None
-    if config['model']['name'] == 'pointnet':
+    if config["model"]["name"] == "pointnet":
         model = torch3d.models.segmentation.PointNet(
-            config['model']['in_channels'],
-            config['model']['num_classes']
+            config["model"]["in_channels"],
+            config["model"]["num_classes"]
         )
-    elif config['model']['name'] == 'pointcnn':
+    elif config["model"]["name"] == "pointcnn":
         model = torch3d.models.segmentation.PointCNN(
-            config['model']['in_channels'],
-            config['model']['num_classes']
+            config["model"]["in_channels"],
+            config["model"]["num_classes"]
         )
     return model
 
 
 def create_optimizer(config, parameters):
     optimizer = None
-    if config['optimizer']['name'] == 'sgd':
+    if config["optimizer"]["name"] == "sgd":
         optimizer = optim.SGD(
             parameters,
-            lr=config['optimizer']['lr'],
-            momentum=config['optimizer']['momentum']
+            lr=config["optimizer"]["lr"],
+            momentum=config["optimizer"]["momentum"]
         )
-    elif config['optimizer']['name'] == 'adam':
-        optimizer = optim.Adam(parameters, lr=config['optimizer']['lr'])
+    elif config["optimizer"]["name"] == "adam":
+        optimizer = optim.Adam(parameters, lr=config["optimizer"]["lr"])
     return optimizer
 
 
 def create_metrics(config):
-    accuracy = metrics.Accuracy(config['model']['num_classes'])
-    jaccard = metrics.Jaccard(config['model']['num_classes'])
+    accuracy = metrics.Accuracy(config["model"]["num_classes"])
+    jaccard = metrics.Jaccard(config["model"]["num_classes"])
     return [accuracy, jaccard]
 
 
 def main(args, options=None):
-    with open(args.config, 'r') as fp:
+    with open(args.config, "r") as fp:
         config = yaml.load(fp, Loader=yaml.SafeLoader)
     if options:
         config = utils.override_config(config, options)
@@ -111,7 +111,7 @@ def main(args, options=None):
         metrics,
         optimizer,
         scheduler=None,
-        **config['trainer']
+        **config["trainer"]
     )
     if not args.eval:
         trainer.fit()
@@ -123,9 +123,9 @@ def main(args, options=None):
             metric.report(categories)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default=None, type=str)
-    parser.add_argument('--eval', default=False, action='store_true')
+    parser.add_argument("--config", default=None, type=str)
+    parser.add_argument("--eval", default=False, action="store_true")
     args, options = parser.parse_known_args()
     main(args, options)

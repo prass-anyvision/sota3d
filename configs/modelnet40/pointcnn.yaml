@@ -1,23 +1,23 @@
 dataset:
-  root: 'data'
+  root: "data"
   batch_size: 64
   num_workers: 8
   download: true
 model:
-  name: 'pointcnn'
+  name: "pointcnn"
   in_channels: 0
   num_classes: 40
 optimizer:
-  name: 'adam'
+  name: "adam"
   lr: 0.001
   momentum: 0.9
 trainer:
-  device: 'cuda'
+  device: "cuda"
   epochs: 250
-  logdir: 'logs/modelnet40/pointcnn'
+  logdir: "logs/modelnet40/pointcnn"
   log_interval: 10
   eval_freq: 10
-  monitor: 'max accuracy'
+  monitor: "max accuracy"
   tensorboard: false
   early_stopping: false
   resume: false

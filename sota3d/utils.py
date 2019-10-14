@@ -3,9 +3,9 @@ from ast import literal_eval
 
 def override_config(config, options):
     for k, v in zip(options[0::2], options[1::2]):
-        assert k.startswith('--')
+        assert k.startswith("--")
 
-        keys = k[2:].split('.')
+        keys = k[2:].split(".")
         d = config
         for subkey in keys[:-1]:
             assert subkey in d

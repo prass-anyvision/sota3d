@@ -15,11 +15,11 @@ class Trainer:
                  metrics,
                  optimizer,
                  scheduler,
-                 device='cuda',
-                 logdir='logs',
+                 device="cuda",
+                 logdir="logs",
                  log_interval=10,
                  epochs=100,
-                 monitor='off',
+                 monitor="off",
                  early_stopping=False,
                  tensorboard=False,
                  tensorboard_cb=None,
@@ -32,13 +32,13 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.metrics = metrics
-        if monitor == 'off':
-            self.mode = 'off'
+        if monitor == "off":
+            self.mode = "off"
             self.monitor = None
             self.best = 0
         else:
             self.mode, self.monitor = monitor.split()
-            self.best = np.inf if self.mode == 'min' else -np.inf
+            self.best = np.inf if self.mode == "min" else -np.inf
         self.device = device
         self.epochs = epochs
         self.logdir = logdir
@@ -53,14 +53,14 @@ class Trainer:
     def fit(self):
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
-        fname = os.path.join(self.logdir, 'config.yaml')
-        with open(fname, 'w') as fp:
+        fname = os.path.join(self.logdir, "config.yaml")
+        with open(fname, "w") as fp:
             yaml.dump(self.config, fp, default_flow_style=False)
 
         self.model.to(self.device)
         if self.resume:
             self._load_checkpoint(best=False)
-            print('Resume training from epoch {:03d}'.format(self.initial_epoch))
+            print("Resume training from epoch {:03d}".format(self.initial_epoch))
 
         for epoch in range(self.initial_epoch, self.epochs + 1):
             stats = self._train_epoch(epoch)
@@ -70,32 +70,32 @@ class Trainer:
             self._save_checkpoint(epoch, best=False)
             if epoch % self.eval_freq == 0:
                 best = False
-                if self.mode != 'off':
+                if self.mode != "off":
                     curr = stats[self.monitor]
-                    if self.mode == 'min':
+                    if self.mode == "min":
                         best = curr < self.best
-                    elif self.mode == 'max':
+                    elif self.mode == "max":
                         best = curr > self.best
                 if best:
-                    print('Saving checkpoint...')
+                    print("Saving checkpoint...")
                     self.best = curr
                     self._save_checkpoint(epoch, best)
 
     def evaluate(self, best=True):
         self.model.to(self.device)
-        print('Loading checkpoint...')
+        print("Loading checkpoint...")
         self._load_checkpoint(best)
-        print('Epoch: {:03d}'.format(self.initial_epoch - 1))
+        print("Epoch: {:03d}".format(self.initial_epoch - 1))
         self._eval_epoch()
 
     def _train_epoch(self, epoch):
         meter = AverageMeter()
 
-        phase = 'train'
+        phase = "train"
         postfix = {}
-        desc = 'Epoch [{:03d}/{:03d}]'.format(epoch, self.epochs)
+        desc = "Epoch [{:03d}/{:03d}]".format(epoch, self.epochs)
         pbar = tqdm.tqdm(total=len(self.dataloaders[phase]), desc=desc)
-        postfix['lr'] = self._get_lr()
+        postfix["lr"] = self._get_lr()
 
         if self.metrics is not None:
             for metric in self.metrics:
@@ -114,7 +114,7 @@ class Trainer:
 
             batch_size = inputs.shape[0]
             meter.update(loss.item(), step=batch_size)
-            postfix['loss'] = meter.avg
+            postfix["loss"] = meter.avg
 
             if self.metrics is not None:
                 for metric in self.metrics:
@@ -136,9 +136,9 @@ class Trainer:
     def _eval_epoch(self):
         meter = AverageMeter()
 
-        phase = 'test'
+        phase = "test"
         postfix = {}
-        desc = 'Evaluation'
+        desc = "Evaluation"
         pbar = tqdm.tqdm(total=len(self.dataloaders[phase]), desc=desc)
 
         if self.metrics is not None:
@@ -165,7 +165,7 @@ class Trainer:
                 if self.writer is not None and i % self.log_interval == 0:
                     pass
 
-                postfix['loss'] = meter.avg
+                postfix["loss"] = meter.avg
                 pbar.set_postfix(**postfix)
                 pbar.update()
             pbar.close()
@@ -173,29 +173,29 @@ class Trainer:
 
     def _save_checkpoint(self, epoch, best=False):
         checkpoint = {
-            'epoch': epoch,
-            'best': self.best,
-            'config': self.config,
-            'model': self.model.state_dict(),
-            'optimizer': self.optimizer.state_dict(),
+            "epoch": epoch,
+            "best": self.best,
+            "config": self.config,
+            "model": self.model.state_dict(),
+            "optimizer": self.optimizer.state_dict(),
         }
-        basename = 'best.pth' if best else 'last.pth'
+        basename = "best.pth" if best else "last.pth"
         fname = os.path.join(self.logdir, basename)
         torch.save(checkpoint, fname)
 
     def _load_checkpoint(self, best=False):
-        basename = 'best.pth' if best else 'last.pth'
+        basename = "best.pth" if best else "last.pth"
         fname = os.path.join(self.logdir, basename)
         state = torch.load(fname)
-        self.initial_epoch = state['epoch'] + 1
-        self.best = state['best']
-        self.model.load_state_dict(state['model'])
+        self.initial_epoch = state["epoch"] + 1
+        self.best = state["best"]
+        self.model.load_state_dict(state["model"])
         if self.optimizer is not None:
-            self.optimizer.load_state_dict(state['optimizer'])
+            self.optimizer.load_state_dict(state["optimizer"])
 
     def _get_lr(self):
         for param in self.optimizer.param_groups:
-            return param['lr']
+            return param["lr"]
 
 
 class AverageMeter:
