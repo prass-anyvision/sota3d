@@ -14,13 +14,9 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = transforms.ToTensor()
+        transform = transforms.First(transforms.ToTensor())
     elif config["model"]["name"] == "pointcnn":
-        transform = transforms.Compose([
-            transforms.Downsample(1024),
-            transforms.Shuffle(),
-            transforms.ToTensor()
-        ])
+        transform = None
     return transform
 
 
@@ -42,7 +38,7 @@ def create_dataloaders(config, transform):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
-                transform=transforms.ToTensor(),
+                transform=transforms.First(transforms.ToTensor()),
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -83,8 +79,9 @@ def create_optimizer(config, parameters):
 
 
 def create_metrics(config):
-    accuracy = metrics.Accuracy(config["model"]["num_classes"])
-    return [accuracy]
+    return [
+        metrics.Accuracy(config["model"]["num_classes"])
+    ]
 
 
 def main(args, options=None):
@@ -113,11 +110,6 @@ def main(args, options=None):
     if not args.eval:
         trainer.fit()
     trainer.evaluate()
-    # report evaluation metrics
-    categories = datasets.ModelNet40.categories
-    if metrics is not None:
-        for metric in metrics:
-            metric.report(categories)
 
 
 if __name__ == "__main__":

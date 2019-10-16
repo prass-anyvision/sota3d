@@ -136,7 +136,12 @@ class Trainer:
     def _eval_epoch(self):
         meter = AverageMeter()
 
-        phase = "test"
+        phase = "train"
+        if "val" in dataloaders:
+            phase = "val"
+        elif "test" in dataloaders:
+            phase = "test"
+
         postfix = {}
         desc = "Evaluation"
         pbar = tqdm.tqdm(total=len(self.dataloaders[phase]), desc=desc)
