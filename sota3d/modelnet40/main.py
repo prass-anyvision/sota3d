@@ -79,9 +79,7 @@ def create_optimizer(config, parameters):
 
 
 def create_metrics(config):
-    return [
-        metrics.Accuracy(config["model"]["num_classes"])
-    ]
+    return [metrics.Accuracy(config["model"]["num_classes"])]
 
 
 def main(args, options=None):
