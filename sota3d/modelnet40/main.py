@@ -23,7 +23,7 @@ def create_transforms(config):
             "train": Compose([
                 First(RandomDownsample(1024)),
                 First(Shuffle())
-            )],
+            ]),
             "test": None
         }
     return transforms
@@ -35,7 +35,7 @@ def create_dataloaders(config, transforms):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=True,
-                transform=transform["train"],
+                transform=transforms["train"],
                 download=config["dataset"]["download"]
             ),
             batch_size=config["dataset"]["batch_size"],
