@@ -5,28 +5,37 @@ import torch.nn as nn
 import torch.optim as optim
 import torch3d
 import torch3d.datasets as datasets
-import torch3d.transforms as transforms
 import torch3d.metrics as metrics
+from torch3d.transforms import *
 
 from .. import Trainer
 from .. import utils
 
 
-def create_transform(config):
+def create_transforms(config):
     if config["model"]["name"] == "pointnet":
-        transform = transforms.First(transforms.ToTensor())
+        transforms = {
+            "train": First(ToTensor()),
+            "test": First(ToTensor())
+        }
     elif config["model"]["name"] == "pointcnn":
-        transform = None
-    return transform
+        transforms = {
+            "train": Compose([
+                First(RandomDownsample(1024)),
+                First(Shuffle())
+            )],
+            "test": None
+        }
+    return transforms
 
 
-def create_dataloaders(config, transform):
+def create_dataloaders(config, transforms):
     dataloaders = {
         "train": torch.utils.data.DataLoader(
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=True,
-                transform=transform,
+                transform=transform["train"],
                 download=config["dataset"]["download"]
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -38,7 +47,7 @@ def create_dataloaders(config, transform):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
-                transform=transforms.First(transforms.ToTensor()),
+                transform=transforms["test"],
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -89,8 +98,8 @@ def main(args, options=None):
         config = utils.override_config(config, options)
         print(yaml.dump(config))
 
-    transform = create_transform(config)
-    dataloaders = create_dataloaders(config, transform)
+    transforms = create_transforms(config)
+    dataloaders = create_dataloaders(config, transforms)
     model = create_model(config)
     optimizer = create_optimizer(config, model.parameters())
     criteria = nn.CrossEntropyLoss()
