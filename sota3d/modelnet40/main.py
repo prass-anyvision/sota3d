@@ -6,36 +6,36 @@ import torch.optim as optim
 import torch3d
 import torch3d.datasets as datasets
 import torch3d.metrics as metrics
-from torch3d.transforms import *
+import torch3d.transforms as transforms
 
 from .. import Trainer
 from .. import utils
 
 
-def create_transforms(config):
+def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transforms = {
-            "train": First(ToTensor()),
-            "test": First(ToTensor())
+        transform = {
+            "train": transforms.First(transforms.ToTensor()),
+            "test": transforms.First(transforms.ToTensor())
         }
     elif config["model"]["name"] == "pointcnn":
-        transforms = {
-            "train": Compose([
-                First(RandomDownsample(1024)),
-                First(Shuffle())
+        transform = {
+            "train": transforms.Compose([
+                transforms.First(transforms.RandomDownsample(1024)),
+                transforms.First(transforms.Shuffle())
             ]),
             "test": None
         }
-    return transforms
+    return transform
 
 
-def create_dataloaders(config, transforms):
+def create_dataloaders(config, transform):
     dataloaders = {
         "train": torch.utils.data.DataLoader(
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=True,
-                transform=transforms["train"],
+                transform=transform["train"],
                 download=config["dataset"]["download"]
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -47,7 +47,7 @@ def create_dataloaders(config, transforms):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
-                transform=transforms["test"],
+                transform=transform["test"],
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -98,8 +98,8 @@ def main(args, options=None):
         config = utils.override_config(config, options)
         print(yaml.dump(config))
 
-    transforms = create_transforms(config)
-    dataloaders = create_dataloaders(config, transforms)
+    transform = create_transform(config)
+    dataloaders = create_dataloaders(config, transform)
     model = create_model(config)
     optimizer = create_optimizer(config, model.parameters())
     criteria = nn.CrossEntropyLoss()
