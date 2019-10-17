@@ -99,7 +99,7 @@ class Estimator:
         self.model.eval()
         with torch.no_grad():
             for i, (inputs, target) in enumerate(self.dataloaders[phase]):
-                inputs = input.to(self.device)
+                inputs = inputs.to(self.device)
                 target = target.to(self.device)
                 output = self.model(inputs)
                 yield output.cpu()
@@ -127,7 +127,7 @@ class Estimator:
             loss.backward()
             self.optimizer.step()
 
-            batch_size = input.shape[0]
+            batch_size = inputs.shape[0]
             meter.update(loss.item(), step=batch_size)
             postfix["loss"] = meter.avg
 

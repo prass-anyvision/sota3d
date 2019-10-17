@@ -104,7 +104,7 @@ def main(args, options=None):
     optimizer = create_optimizer(config, model.parameters())
     criteria = nn.CrossEntropyLoss()
     metrics = create_metrics(config)
-    trainer = Trainer(
+    estimator = Estimator(
         model,
         config,
         dataloaders,
@@ -115,8 +115,8 @@ def main(args, options=None):
         **config["trainer"]
     )
     if not args.eval:
-        trainer.fit()
-    trainer.evaluate()
+        estimator.fit()
+    estimator.evaluate()
 
 
 if __name__ == "__main__":
