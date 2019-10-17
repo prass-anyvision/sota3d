@@ -8,7 +8,7 @@ import torch3d.datasets as datasets
 import torch3d.metrics as metrics
 import torch3d.transforms as transforms
 
-from .. import Trainer
+from .. import Estimator
 from .. import utils
 
 

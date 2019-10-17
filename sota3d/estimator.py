@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 
 
-class Trainer:
+class Estimator:
     def __init__(self,
                  model,
                  config,
@@ -25,6 +25,7 @@ class Trainer:
                  tensorboard_cb=None,
                  eval_freq=1,
                  resume=False):
+        assert "train" in dataloaders
         self.model = model
         self.config = config
         self.dataloaders = dataloaders
@@ -60,12 +61,17 @@ class Trainer:
         self.model.to(self.device)
         if self.resume:
             self._load_checkpoint(best=False)
-            print("Resume training from epoch {:03d}".format(self.initial_epoch))
+            print("Resume from epoch {:03d}".format(self.initial_epoch))
 
         for epoch in range(self.initial_epoch, self.epochs + 1):
             stats = self._train_epoch(epoch)
             if epoch % self.eval_freq == 0:
-                stats.update(self._eval_epoch())
+                phase = "train"
+                if "val" in self.dataloaders:
+                    phase = "val"
+                elif "test" in self.dataloaders:
+                    phase = "test"
+                stats.update(self._eval_epoch(phase))
 
             self._save_checkpoint(epoch, best=False)
             if epoch % self.eval_freq == 0:
@@ -81,17 +87,26 @@ class Trainer:
                     self.best = curr
                     self._save_checkpoint(epoch, best)
 
-    def evaluate(self, best=True):
+    def evaluate(self, phase="test"):
         self.model.to(self.device)
-        print("Loading checkpoint...")
-        self._load_checkpoint(best)
-        print("Epoch: {:03d}".format(self.initial_epoch - 1))
-        self._eval_epoch()
+        self._load_checkpoint(best=True)
+        self._eval_epoch(phase)
 
-    def _train_epoch(self, epoch):
+    def predict(self, phase="test"):
+        self.model.to(self.device)
+        self._load_checkpoint(best=True)
+
+        self.model.eval()
+        with torch.no_grad():
+            for i, (inputs, target) in enumerate(self.dataloaders[phase]):
+                inputs = input.to(self.device)
+                target = target.to(self.device)
+                output = self.model(inputs)
+                yield output.cpu()
+
+    def _train_epoch(self, epoch, phase="train"):
         meter = AverageMeter()
 
-        phase = "train"
         postfix = {}
         desc = "Epoch [{:03d}/{:03d}]".format(epoch, self.epochs)
         pbar = tqdm.tqdm(total=len(self.dataloaders[phase]), desc=desc)
@@ -112,7 +127,7 @@ class Trainer:
             loss.backward()
             self.optimizer.step()
 
-            batch_size = inputs.shape[0]
+            batch_size = input.shape[0]
             meter.update(loss.item(), step=batch_size)
             postfix["loss"] = meter.avg
 
@@ -133,14 +148,8 @@ class Trainer:
             self.scheduler.step()
         return postfix
 
-    def _eval_epoch(self):
+    def _eval_epoch(self, phase):
         meter = AverageMeter()
-
-        phase = "train"
-        if "val" in dataloaders:
-            phase = "val"
-        elif "test" in dataloaders:
-            phase = "test"
 
         postfix = {}
         desc = "Evaluation"
