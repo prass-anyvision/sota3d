@@ -14,7 +14,7 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = transforms.ToTensor()),
+        transform = transform.ToTensor()
     elif config["model"]["name"] == "pointcnn":
         transform = transforms.Compose([
             transforms.RandomSample(1024),
@@ -41,7 +41,7 @@ def create_dataloaders(config, transform):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
-                transform=transforms.ToTensor(),
+                transform=transform,
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -106,7 +106,7 @@ def main(args, options=None):
         metrics,
         optimizer,
         scheduler=None,
-        **config["trainer"]
+        **config["estimator"]
     )
     if not args.eval:
         estimator.fit()
