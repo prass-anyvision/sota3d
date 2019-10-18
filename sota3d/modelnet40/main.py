@@ -14,18 +14,12 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = {
-            "train": transforms.First(transforms.ToTensor()),
-            "test": transforms.First(transforms.ToTensor())
-        }
+        transform = transforms.ToTensor()),
     elif config["model"]["name"] == "pointcnn":
-        transform = {
-            "train": transforms.Compose([
-                transforms.First(transforms.RandomDownsample(1024)),
-                transforms.First(transforms.Shuffle())
-            ]),
-            "test": None
-        }
+        transform = transforms.Compose([
+            transforms.RandomSample(1024),
+            transforms.Shuffle()
+        ])
     return transform
 
 
@@ -35,7 +29,7 @@ def create_dataloaders(config, transform):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=True,
-                transform=transform["train"],
+                transform=transform,
                 download=config["dataset"]["download"]
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -47,7 +41,7 @@ def create_dataloaders(config, transform):
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
-                transform=transform["test"],
+                transform=transforms.ToTensor(),
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
