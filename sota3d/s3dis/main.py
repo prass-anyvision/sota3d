@@ -5,8 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torch3d
 import torch3d.datasets as datasets
-import torch3d.transforms as transforms
 import torch3d.metrics as metrics
+import torch3d.transforms as T
 
 from .. import Trainer
 from .. import utils
@@ -14,13 +14,9 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = transforms.ToTensor()
-    elif config["model"]["name"] == "pointcnn":
-        transform = transforms.Compose([
-            lambda points, target: (points[:, :3], target),
-            transforms.RandomSample(2048, synchronized=True),
-            transforms.Shuffle(synchronized=True)
-        ])
+        def transform(points, target):
+            points, target = T.to_tensor(points), target
+            return points, target
     return transform
 
 
@@ -44,7 +40,7 @@ def create_dataloaders(config, transform):
                 config["dataset"]["root"],
                 train=False,
                 test_area=config["dataset"]["test_area"],
-                transform=transforms.ToTensor(),
+                transform=transform,
                 download=False
             ),
             batch_size=config["dataset"]["batch_size"],
@@ -60,11 +56,6 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = torch3d.models.segmentation.PointNet(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
-        )
-    elif config["model"]["name"] == "pointcnn":
-        model = torch3d.models.segmentation.PointCNN(
             config["model"]["in_channels"],
             config["model"]["num_classes"]
         )
