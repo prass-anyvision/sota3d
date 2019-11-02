@@ -17,9 +17,9 @@ def create_transform(config):
         transform = transforms.ToTensor()
     elif config["model"]["name"] == "pointcnn":
         transform = transforms.Compose([
-            transforms.Downsample(2048),
-            transforms.Shuffle(),
-            transforms.ToTensor()
+            lambda points, target: (points[:, :3], target),
+            transforms.RandomSample(2048, synchronized=True),
+            transforms.Shuffle(synchronized=True)
         ])
     return transform
 
@@ -116,11 +116,6 @@ def main(args, options=None):
     if not args.eval:
         trainer.fit()
     trainer.evaluate()
-    # report evaluation metrics
-    categories = datasets.S3DIS.categories
-    if metrics is not None:
-        for metric in metrics:
-            metric.report(categories)
 
 
 if __name__ == "__main__":

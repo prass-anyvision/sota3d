@@ -8,13 +8,13 @@ import torch3d.datasets as datasets
 import torch3d.metrics as metrics
 import torch3d.transforms as transforms
 
-from .. import Estimator
+from .. import Trainer
 from .. import utils
 
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = transform.ToTensor()
+        transform = transforms.ToTensor()
     elif config["model"]["name"] == "pointcnn":
         transform = transforms.Compose([
             transforms.RandomSample(1024),
@@ -90,7 +90,7 @@ def main(args, options=None):
         config = yaml.load(fp, Loader=yaml.SafeLoader)
     if options:
         config = utils.override_config(config, options)
-        print(yaml.dump(config))
+    print(yaml.dump(config))
 
     transform = create_transform(config)
     dataloaders = create_dataloaders(config, transform)
@@ -98,7 +98,7 @@ def main(args, options=None):
     optimizer = create_optimizer(config, model.parameters())
     criteria = nn.CrossEntropyLoss()
     metrics = create_metrics(config)
-    estimator = Estimator(
+    trainer = Trainer(
         model,
         config,
         dataloaders,
@@ -106,11 +106,11 @@ def main(args, options=None):
         metrics,
         optimizer,
         scheduler=None,
-        **config["estimator"]
+        **config["trainer"]
     )
     if not args.eval:
-        estimator.fit()
-    estimator.evaluate()
+        trainer.fit()
+    trainer.evaluate()
 
 
 if __name__ == "__main__":

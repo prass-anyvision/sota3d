@@ -11,7 +11,7 @@ optimizer:
   name: "adam"
   lr: 0.001
   momentum: 0.9
-estimator:
+trainer:
   device: "cuda"
   epochs: 250
   logdir: "logs/modelnet40/pointcnn"

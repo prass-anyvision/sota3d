@@ -1,1 +1,1 @@
-from .estimator import Estimator
+from .trainer import Trainer

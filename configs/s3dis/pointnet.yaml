@@ -3,7 +3,7 @@ dataset:
   batch_size: 32
   num_workers: 8
   test_area: 5
-  download: True
+  download: true
 model:
   name: "pointnet"
   in_channels: 9
@@ -21,4 +21,4 @@ trainer:
   monitor: "max accuracy"
   tensorboard: false
   early_stopping: false
-  resume: False
+  resume: false

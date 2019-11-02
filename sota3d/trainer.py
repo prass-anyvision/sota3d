@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 
 
-class Estimator:
+class Trainer:
     def __init__(self,
                  model,
                  config,
