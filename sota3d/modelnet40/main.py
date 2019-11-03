@@ -17,6 +17,9 @@ def create_transform(config):
         def transform(points, target):
             points, target = T.to_tensor(points), target
             return points, target
+    if config["model"]["name"] == "pointnet2":
+        def transform(points, target):
+            return points, target
     elif config["model"]["name"] == "pointcnn":
         def transform(points, target):
             samples = T.random_sample(points, 1024)
@@ -61,6 +64,11 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = torch3d.models.PointNet(
+            config["model"]["in_channels"],
+            config["model"]["num_classes"]
+        )
+    elif config["model"]["name"] == "pointnet2":
+        model = torch3d.models.PointNetSSG(
             config["model"]["in_channels"],
             config["model"]["num_classes"]
         )
