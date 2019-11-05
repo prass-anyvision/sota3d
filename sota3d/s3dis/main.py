@@ -17,6 +17,10 @@ def create_transform(config):
         def transform(points, target):
             points, target = T.to_tensor(points), target
             return points, target
+    elif config["model"]["name"] == "pointnet2":
+        def transform(points, target):
+            points, target = points[..., :3], target
+            return points, target
     return transform
 
 
@@ -56,6 +60,11 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = torch3d.models.segmentation.PointNet(
+            config["model"]["in_channels"],
+            config["model"]["num_classes"]
+        )
+    elif config["model"]["name"] == "pointnet2":
+        model = torch3d.models.segmentation.PointNetSSG(
             config["model"]["in_channels"],
             config["model"]["num_classes"]
         )
