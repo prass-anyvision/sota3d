@@ -14,19 +14,25 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
+
         def transform(points, target):
             points, target = T.to_tensor(points), target
             return points, target
+
     if config["model"]["name"] == "pointnet2":
+
         def transform(points, target):
             return points, target
+
     elif config["model"]["name"] == "pointcnn":
+
         def transform(points, target):
             samples = T.random_sample(points, 1024)
             points, target = points[samples], target
             indices = T.shuffle(points)
             points, target = points[indices], target
             return points, target
+
     return transform
 
 
@@ -37,25 +43,25 @@ def create_dataloaders(config, transform):
                 config["dataset"]["root"],
                 train=True,
                 transform=transform,
-                download=config["dataset"]["download"]
+                download=config["dataset"]["download"],
             ),
             batch_size=config["dataset"]["batch_size"],
             num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
-            shuffle=True
+            shuffle=True,
         ),
         "test": torch.utils.data.DataLoader(
             datasets.ModelNet40(
                 config["dataset"]["root"],
                 train=False,
                 transform=transform,
-                download=False
+                download=False,
             ),
             batch_size=config["dataset"]["batch_size"],
             num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
-            shuffle=False
-        )
+            shuffle=False,
+        ),
     }
     return dataloaders
 
@@ -64,18 +70,15 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = torch3d.models.PointNet(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
+            config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointnet2":
         model = torch3d.models.PointNetSSG(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
+            config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointcnn":
         model = torch3d.models.PointCNN(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
+            config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
 
@@ -86,7 +89,7 @@ def create_optimizer(config, parameters):
         optimizer = optim.SGD(
             parameters,
             config["optimizer"]["lr"],
-            momentum=config["optimizer"]["momentum"]
+            momentum=config["optimizer"]["momentum"],
         )
     elif config["optimizer"]["name"] == "adam":
         optimizer = optim.Adam(parameters, config["optimizer"]["lr"])

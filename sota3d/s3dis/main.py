@@ -14,13 +14,17 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
+
         def transform(points, target):
             points, target = T.to_tensor(points), target
             return points, target
+
     elif config["model"]["name"] == "pointnet2":
+
         def transform(points, target):
             points, target = points[..., :3], target
             return points, target
+
     return transform
 
 
@@ -32,12 +36,12 @@ def create_dataloaders(config, transform):
                 train=True,
                 test_area=config["dataset"]["test_area"],
                 transform=transform,
-                download=config["dataset"]["download"]
+                download=config["dataset"]["download"],
             ),
             batch_size=config["dataset"]["batch_size"],
             num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
-            shuffle=True
+            shuffle=True,
         ),
         "test": torch.utils.data.DataLoader(
             datasets.S3DIS(
@@ -45,13 +49,13 @@ def create_dataloaders(config, transform):
                 train=False,
                 test_area=config["dataset"]["test_area"],
                 transform=transform,
-                download=False
+                download=False,
             ),
             batch_size=config["dataset"]["batch_size"],
             num_workers=config["dataset"]["num_workers"],
             pin_memory=True,
-            shuffle=False
-        )
+            shuffle=False,
+        ),
     }
     return dataloaders
 
@@ -60,13 +64,11 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = torch3d.models.segmentation.PointNet(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
+            config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointnet2":
         model = torch3d.models.segmentation.PointNetSSG(
-            config["model"]["in_channels"],
-            config["model"]["num_classes"]
+            config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
 
@@ -77,7 +79,7 @@ def create_optimizer(config, parameters):
         optimizer = optim.SGD(
             parameters,
             lr=config["optimizer"]["lr"],
-            momentum=config["optimizer"]["momentum"]
+            momentum=config["optimizer"]["momentum"],
         )
     elif config["optimizer"]["name"] == "adam":
         optimizer = optim.Adam(parameters, lr=config["optimizer"]["lr"])

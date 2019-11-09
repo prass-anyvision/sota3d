@@ -7,24 +7,26 @@ import numpy as np
 
 
 class Trainer:
-    def __init__(self,
-                 model,
-                 config,
-                 dataloaders,
-                 criteria,
-                 metrics,
-                 optimizer,
-                 scheduler,
-                 device="cuda",
-                 logdir="logs",
-                 log_interval=10,
-                 epochs=100,
-                 monitor="off",
-                 early_stopping=False,
-                 tensorboard=False,
-                 tensorboard_cb=None,
-                 eval_freq=1,
-                 resume=False):
+    def __init__(
+        self,
+        model,
+        config,
+        dataloaders,
+        criteria,
+        metrics,
+        optimizer,
+        scheduler,
+        device="cuda",
+        logdir="logs",
+        log_interval=10,
+        epochs=100,
+        monitor="off",
+        early_stopping=False,
+        tensorboard=False,
+        tensorboard_cb=None,
+        eval_freq=1,
+        resume=False,
+    ):
         assert "train" in dataloaders
         self.model = model
         self.config = config
