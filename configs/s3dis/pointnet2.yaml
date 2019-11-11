@@ -6,7 +6,7 @@ dataset:
   download: true
 model:
   name: "pointnet2"
-  in_channels: 0
+  in_channels: 6
   num_classes: 13
 optimizer:
   name: "adam"

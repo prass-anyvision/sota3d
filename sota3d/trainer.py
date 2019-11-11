@@ -120,17 +120,16 @@ class Trainer:
 
         self.model.train()
         for i, (inputs, target) in enumerate(self.dataloaders[phase]):
-            inputs = inputs.to(self.device)
+            inputs = [x.to(self.device) for x in inputs]
             target = target.to(self.device)
 
             self.optimizer.zero_grad()
-            output = self.model(inputs)
+            output = self.model(*inputs)
             loss = self.criteria(output, target)
             loss.backward()
             self.optimizer.step()
 
-            batch_size = inputs.shape[0]
-            meter.update(loss.item(), step=batch_size)
+            meter.update(loss.item())
             postfix["loss"] = meter.avg
 
             if self.metrics is not None:
@@ -164,14 +163,13 @@ class Trainer:
         self.model.eval()
         with torch.no_grad():
             for i, (inputs, target) in enumerate(self.dataloaders[phase]):
-                inputs = inputs.to(self.device)
+                inputs = [x.to(self.device) for x in inputs]
                 target = target.to(self.device)
 
-                output = self.model(inputs)
+                output = self.model(*inputs)
                 loss = self.criteria(output, target)
 
-                batch_size = inputs.shape[0]
-                meter.update(loss.item(), step=batch_size)
+                meter.update(loss.item())
 
                 if self.metrics is not None:
                     for metric in self.metrics:
