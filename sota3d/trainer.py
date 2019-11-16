@@ -120,7 +120,10 @@ class Trainer:
 
         self.model.train()
         for i, (inputs, target) in enumerate(self.dataloaders[phase]):
-            inputs = [x.to(self.device) for x in inputs]
+            if isinstance(inputs, torch.Tensor):
+                inputs = [inputs.to(self.device)]
+            else:
+                inputs = [x.to(self.device) for x in inputs]
             target = target.to(self.device)
 
             self.optimizer.zero_grad()
@@ -163,7 +166,10 @@ class Trainer:
         self.model.eval()
         with torch.no_grad():
             for i, (inputs, target) in enumerate(self.dataloaders[phase]):
-                inputs = [x.to(self.device) for x in inputs]
+                if isinstance(inputs, torch.Tensor):
+                    inputs = [inputs.to(self.device)]
+                else:
+                    inputs = [x.to(self.device) for x in inputs]
                 target = target.to(self.device)
 
                 output = self.model(*inputs)
