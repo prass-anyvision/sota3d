@@ -9,8 +9,9 @@ use k-fold validation.
 Leaderboard
 -----------
 
-| Method        | overall acc.  | mean acc.     | mean IoU      |
-| ------------- | ------------- | ------------- | ------------- |
-| PointNet      | 0.827 ± 0.051 | 0.599 ± 0.120 | 0.496 ± 0.120 |
+| Method           | overall acc.  | mean acc.     | mean IoU      |
+| ---------------- | ------------- | ------------- | ------------- |
+| PointNet         | 0.827 ± 0.051 | 0.599 ± 0.120 | 0.496 ± 0.120 |
+| PointNet++ (SSG) | 0.868 ± 0.022 | 0.694 ± 0.093 | 0.580 ± 0.100 |
 
-Last update: 15 October 2019
+Last update: 20 November 2019
