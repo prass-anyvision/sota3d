@@ -1,0 +1,24 @@
+dataset:
+  root: "data"
+  batch_size: 32
+  num_workers: 8
+  test_area: 5
+  download: true
+model:
+  name: "pointnet2"
+  in_channels: 6
+  num_classes: 13
+optimizer:
+  name: "adam"
+  lr: 0.001
+  momentum: 0.9
+trainer:
+  device: "cuda"
+  epochs: 100
+  logdir: "logs/s3dis/pointnet2"
+  log_interval: 5
+  eval_freq: 10
+  monitor: "max accuracy"
+  tensorboard: false
+  early_stopping: false
+  resume: false
