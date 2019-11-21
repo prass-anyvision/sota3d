@@ -1,35 +1,29 @@
-sota3d
+SotA3d
 ======
 
-Sota3d is an attempt to reproduce and benchmark state-of-the-art 3D deep
-learning methods on [PyTorch](https://pytorch.org/).
+SotA3d is an attempt to reproduce and benchmark state-of-the-art 3D deep learning methods on [PyTorch](https://pytorch.org/).
 
 The current supported benchmarks are:
 
 **Classification**
-- [*ModelNet40*](sota3d/modelnet40):
-  Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
+- [*ModelNet40*](sota3d/modelnet40): Princeton ModelNet Dataset [[URL](https://modelnet.cs.princeton.edu)]
 
 **Semantic segmentation**
-- [*S3DIS*](sota3d/s3dis):
-  Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
+- [*S3DIS*](sota3d/s3dis): Stanford Large-Scale 3D Indoor Spaces Dataset [[URL](http://buildingparser.stanford.edu/dataset.html)]
 
-Why Sota3d?
+Why SotA3d?
 -----------
 
-Sota3d has three goals:
+SotA3d has three goals:
 1. Promoting **reproducible** research in 3D deep learning.
-2. A standard and transparent benchmarking environment for 3D deep learning
-   methods.
+2. A standard and transparent benchmarking environment for 3D deep learning methods.
 3. Sharing up-to-date state-of-the-art models in 3D deep learning.
 
 Guidelines
 ----------
 
-The evaluation process must be *deterministic*, that means the evaluation
-scores obtained from different runs of a method using the same parameters have
-to be the same. Specifically, the following items must **NOT** depend on any
-random processes:
+The evaluation process must be *deterministic*, that means the evaluation scores obtained from different runs of a method using the same parameters have to be the same.
+Specifically, the following items must **NOT** depend on any random processes:
 - Evaluation metrics
 - Order of the test set
 - Content of the input
