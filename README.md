@@ -7,11 +7,11 @@ learning methods on [PyTorch](https://pytorch.org/).
 The current supported benchmarks are:
 
 **Classification**
-- [*ModelNet40*](https://github.com/pqhieu/sota3d/tree/master/sota3d/modelnet40):
+- [*ModelNet40*](sota3d/modelnet40):
   Princeton ModelNet Dataset [[link](https://modelnet.cs.princeton.edu)]
 
 **Semantic segmentation**
-- [*S3DIS*](https://github.com/pqhieu/sota3d/tree/master/sota3d/s3dis):
+- [*S3DIS*](sota3d/s3dis):
   Stanford Large-Scale 3D Indoor Spaces Dataset [[link](http://buildingparser.stanford.edu/dataset.html)]
 
 Why Sota3d?
