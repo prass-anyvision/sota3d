@@ -3,7 +3,7 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch3d
+import torch3d.models as models
 import torch3d.datasets as datasets
 import torch3d.metrics as metrics
 import torch3d.transforms as transforms
@@ -57,15 +57,15 @@ def create_dataloaders(config, transform):
 def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
-        model = torch3d.models.PointNet(
+        model = models.PointNet(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointnet2":
-        model = torch3d.models.PointNetSSG(
+        model = models.PointNetSSG(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointcnn":
-        model = torch3d.models.PointCNN(
+        model = models.PointCNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
