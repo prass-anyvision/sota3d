@@ -1,0 +1,23 @@
+dataset:
+  root: "data"
+  batch_size: 16
+  num_workers: 8
+  download: true
+model:
+  name: "dgcnn"
+  in_channels: 3
+  num_classes: 40
+optimizer:
+  name: "adam"
+  lr: 0.001
+  momentum: 0.9
+trainer:
+  device: "cuda"
+  epochs: 250
+  logdir: "logs/modelnet40/dgcnn"
+  log_interval: 10
+  eval_freq: 10
+  monitor: "max accuracy"
+  tensorboard: false
+  early_stopping: false
+  resume: false

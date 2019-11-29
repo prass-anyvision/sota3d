@@ -21,6 +21,8 @@ def create_transform(config):
         transform = transforms.Compose(
             [transforms.RandomSample(1024), transforms.Shuffle()]
         )
+    elif config["model"]["name"] == "dgcnn":
+        transform = transforms.ToTensor()
     return transform
 
 
@@ -66,6 +68,10 @@ def create_model(config):
         )
     elif config["model"]["name"] == "pointcnn":
         model = models.PointCNN(
+            config["model"]["in_channels"], config["model"]["num_classes"]
+        )
+    elif config["model"]["name"] == "dgcnn":
+        model = models.DGCNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
