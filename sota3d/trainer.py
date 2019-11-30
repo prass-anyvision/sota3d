@@ -94,6 +94,14 @@ class Trainer:
         self._load_checkpoint(best=True)
         self._eval_epoch(phase)
 
+        print("> Performance report")
+        for metric in self.metrics:
+            print(
+                "  → {}: {:.3f} / {:.3f}".format(
+                    metric.name, metric.score(), metric.mean()
+                )
+            )
+
     def predict(self, phase="test"):
         self.model.to(self.device)
         self._load_checkpoint(best=True)
