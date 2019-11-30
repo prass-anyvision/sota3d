@@ -2,12 +2,11 @@ dataset:
   root: "data"
   batch_size: 32
   num_workers: 8
-  test_area: 5
   download: true
 model:
   name: "pointnet2"
-  in_channels: 6
-  num_classes: 13
+  in_channels: 9
+  num_classes: 41
 optimizer:
   name: "adam"
   lr: 0.001
@@ -15,7 +14,7 @@ optimizer:
 trainer:
   device: "cuda"
   epochs: 100
-  logdir: "logs/s3dis/pointnet2"
+  logdir: "logs/scenenn/pointnet2"
   log_interval: 5
   eval_freq: 10
   monitor: "max accuracy"

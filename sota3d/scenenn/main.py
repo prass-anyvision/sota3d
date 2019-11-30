@@ -15,6 +15,11 @@ from .. import utils
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
         transform = transforms.ToTensor()
+    elif config["model"]["name"] == "pointnet2":
+
+        def transform(pcd):
+            return pcd[..., :3], pcd[..., 3:].T
+
     return transform
 
 
@@ -52,6 +57,10 @@ def create_model(config):
     model = None
     if config["model"]["name"] == "pointnet":
         model = models.segmentation.PointNet(
+            config["model"]["in_channels"], config["model"]["num_classes"]
+        )
+    elif config["model"]["name"] == "pointnet2":
+        model = models.segmentation.PointNetSSG(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
