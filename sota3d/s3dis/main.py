@@ -20,6 +20,9 @@ def create_transform(config):
         def transform(pcd):
             return pcd[..., :3], pcd[..., 3:].T
 
+    elif config["model"]["name"] == "dgcnn":
+        transform = transforms.ToTensor()
+
     return transform
 
 
@@ -63,6 +66,10 @@ def create_model(config):
         )
     elif config["model"]["name"] == "pointnet2":
         model = models.segmentation.PointNetSSG(
+            config["model"]["in_channels"], config["model"]["num_classes"]
+        )
+    elif config["model"]["name"] == "dgcnn":
+        model = models.segmentation.DGCNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
