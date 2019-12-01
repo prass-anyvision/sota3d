@@ -56,7 +56,7 @@ class Trainer:
     def fit(self):
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
-        fname = os.path.join(self.logdir, "config.yaml")
+        fname = os.path.join(self.logdir, "config.yml")
         with open(fname, "w") as fp:
             yaml.dump(self.config, fp, default_flow_style=False)
 
