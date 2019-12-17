@@ -6,7 +6,7 @@ import torch.optim as optim
 import torch3d.models as models
 import torch3d.datasets as datasets
 import torch3d.metrics as metrics
-import torch3d.transforms as transforms
+import torch3d.transforms as T
 
 from .. import Trainer
 from .. import utils
@@ -14,15 +14,11 @@ from .. import utils
 
 def create_transform(config):
     if config["model"]["name"] == "pointnet":
-        transform = transforms.ToTensor()
+        transform = T.ToTensor()
     elif config["model"]["name"] == "pointnet2":
-        transform = None
-    elif config["model"]["name"] == "pointcnn":
-        transform = transforms.Compose(
-            [transforms.RandomSample(1024), transforms.Shuffle()]
-        )
+        transform = T.ToTensor()
     elif config["model"]["name"] == "dgcnn":
-        transform = transforms.ToTensor()
+        transform = T.ToTensor()
     return transform
 
 
@@ -64,10 +60,6 @@ def create_model(config):
         )
     elif config["model"]["name"] == "pointnet2":
         model = models.PointNetSSG(
-            config["model"]["in_channels"], config["model"]["num_classes"]
-        )
-    elif config["model"]["name"] == "pointcnn":
-        model = models.PointCNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "dgcnn":

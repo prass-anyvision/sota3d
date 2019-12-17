@@ -1,11 +1,11 @@
 dataset:
   root: "data"
-  batch_size: 64
+  batch_size: 16
   num_workers: 8
   download: true
 model:
   name: "pointnet2"
-  in_channels: 0
+  in_channels: 3
   num_classes: 40
 optimizer:
   name: "adam"
