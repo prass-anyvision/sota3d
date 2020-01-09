@@ -69,7 +69,7 @@ def create_model(config):
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     elif config["model"]["name"] == "pointconv":
-        model = models.PointConvNet(
+        model = models.PointConvNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
