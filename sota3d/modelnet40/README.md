@@ -15,5 +15,6 @@ Leaderboard
 | PointCNN         | 0.900 ± 0.006 | 0.864 ± 0.011 | 5        |
 | PointNet++ (SSG) | 0.901 ± 0.003 | 0.860 ± 0.006 | 5        |
 | DGCNN            | 0.911 ± 0.002 | 0.872 ± 0.004 | 5        |
+| PointConv        | 0.905 ± 0.003 | 0.868 ± 0.004 | 5        |
 
-Last update: 13 December 2019
+Last update: 15 January 2020
