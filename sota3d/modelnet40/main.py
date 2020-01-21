@@ -19,8 +19,6 @@ def create_transform(config):
         transform = T.ToTensor()
     elif config["model"]["name"] == "dgcnn":
         transform = T.ToTensor()
-    elif config["model"]["name"] == "pointconv":
-        transform = T.ToTensor()
     return transform
 
 
@@ -66,10 +64,6 @@ def create_model(config):
         )
     elif config["model"]["name"] == "dgcnn":
         model = models.DGCNN(
-            config["model"]["in_channels"], config["model"]["num_classes"]
-        )
-    elif config["model"]["name"] == "pointconv":
-        model = models.PointConvNN(
             config["model"]["in_channels"], config["model"]["num_classes"]
         )
     return model
